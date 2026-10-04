@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Typing Mistake</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: #0f172a;
+            color: #f8fafc;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 15px;
+        }
+
+        /* Container: Default for Mobile */
+        .app-container {
+            width: 100%;
+            max-width: 1000px;
+            background: rgba(30, 41, 59, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 20px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .main-title {
+            font-size: 1.6rem;
+            font-weight: 800;
+            letter-spacing: 2px;
+            background: linear-gradient(90deg, #38bdf8, #818cf8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-transform: uppercase;
+        }
+
+        .subtitle {
+            font-size: 0.8rem;
+            color: #94a3b8;
+            margin-top: 4px;
+        }
+
+        /* Mobile Layout First */
+        .workspace {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .stats-panel {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+        }
+
+        .stat-card {
+            background: rgba(15, 23, 42, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            padding: 12px 8px;
+            text-align: center;
+        }
+
+        .stat-title {
+            font-size: 0.7rem;
+            color: #94a3b8;
+            text-transform: uppercase;
+        }
+
+        .stat-value {
+            font-size: 1.4rem;
+            font-weight: bold;
+            color: #38bdf8;
+            margin-top: 4px;
+        }
+
+        .typing-zone {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .text-display {
+            background: rgba(15, 23, 42, 0.9);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 16px;
+            font-size: 1rem;
+            line-height: 1.6;
+            height: 140px;
+            overflow-y: auto;
+            color: #64748b;
+            user-select: none;
+        }
+
+        /* Green text when typing correctly */
+        .char-correct {
+            color: #22c55e !important;
+            text-shadow: 0 0 8px rgba(34, 197, 94, 0.4);
+        }
+
+        .char-incorrect {
+            color: #ef4444 !important;
+            background-color: rgba(239, 68, 68, 0.2);
+            border-radius: 2px;
+        }
+
+        .char-current {
+            color: #f8fafc;
+            border-bottom: 2px solid #38bdf8;
+            animation: pulse 1s infinite;
+        }
+
+        @keyframes pulse {
+            50% { border-color: transparent; }
+        }
+
+        .input-area {
+            width: 100%;
+            height: 90px;
+            padding: 12px;
+            font-size: 0.95rem;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(15, 23, 42, 0.5);
+            color: #f8fafc;
+            outline: none;
+            resize: none;
+        }
+
+        .input-area:focus {
+            border-color: #38bdf8;
+        }
+
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .btn-action {
+            width: 100%;
+            padding: 12px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: #fff;
+            background: linear-gradient(135deg, #6366f1, #a855f7);
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+        }
+
+        .result-banner {
+            display: none;
+            padding: 12px;
+            background: rgba(34, 197, 94, 0.15);
+            border: 1px solid #22c55e;
+            border-radius: 10px;
+            color: #22c55e;
+            text-align: center;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        /* Desktop View (যখন আপনি ডেস্কটপে খুলবেন) */
+        @media (min-width: 768px) {
+            .app-container {
+                padding: 30px;
+            }
+
+            .main-title {
+                font-size: 2rem;
+            }
+
+            .workspace {
+                display: grid;
+                grid-template-columns: 220px 1fr;
+                gap: 20px;
+            }
+
+            .stats-panel {
+                display: flex;
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .stat-card {
+                padding: 20px;
+                text-align: left;
+            }
+
+            .stat-value {
+                font-size: 2rem;
+            }
+
+            .text-display {
+                height: 180px;
+                font-size: 1.1rem;
+            }
+
+            .input-area {
+                height: 110px;
+                font-size: 1rem;
+            }
+
+            .btn-action {
+                width: auto;
+                padding: 12px 30px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="app-container">
+        <header>
+            <h1 class="main-title">TYPING MISTAKE</h1>
+            <p class="subtitle">Speed & Accuracy Test</p>
+        </header>
+
+        <div class="result-banner" id="resultBanner">
+            Level: <span id="badgeText">MASTER</span>
+        </div>
+
+        <div class="workspace">
+            <div class="stats-panel">
+                <div class="stat-card">
+                    <div class="stat-title">Time Left</div>
+                    <div class="stat-value" id="timer">60s</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-title">WPM</div>
+                    <div class="stat-value" id="wpm">0</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-title">Mistakes</div>
+                    <div class="stat-value" id="mistakes" style="color: #ef4444;">0</div>
+                </div>
+            </div>
+
+            <div class="typing-zone">
+                <div class="text-display" id="textDisplay"></div>
+                <textarea class="input-area" id="inputArea" placeholder="Start typing here..."></textarea>
+                <div class="controls">
+                    <button class="btn-action" onclick="initGame()">Reset Test</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const sampleText = "Consistency is the key to mastering any skill. When you practice typing daily, your muscle memory improves, allowing your fingers to move effortlessly across the keyboard.";
+
+        const textDisplay = document.getElementById('textDisplay');
+        const inputArea = document.getElementById('inputArea');
+        const timerEl = document.getElementById('timer');
+        const mistakesEl = document.getElementById('mistakes');
+        const wpmEl = document.getElementById('wpm');
+        const resultBanner = document.getElementById('resultBanner');
+        const badgeText = document.getElementById('badgeText');
+
+        let timeLeft = 60;
+        let timer = null;
+        let isTypingStarted = false;
+
+        function loadText() {
+            textDisplay.innerHTML = "";
+            sampleText.split('').forEach(char => {
+                const span = document.createElement('span');
+                span.innerText = char;
+                textDisplay.appendChild(span);
+            });
+            textDisplay.querySelectorAll('span')[0].classList.add('char-current');
+        }
+
+        function handleTyping() {
+            const spans = textDisplay.querySelectorAll('span');
+            const typedChars = inputArea.value.split('');
+
+            if (!isTypingStarted) {
+                isTypingStarted = true;
+                timer = setInterval(updateTimer, 1000);
+            }
+
+            let mistakes = 0;
+
+            spans.forEach((span, index) => {
+                const char = typedChars[index];
+                span.classList.remove('char-current');
+
+                if (char == null) {
+                    span.classList.remove('char-correct', 'char-incorrect');
+                } else if (char === span.innerText) {
+                    span.classList.add('char-correct');
+                    span.classList.remove('char-incorrect');
+                } else {
+                    span.classList.add('char-incorrect');
+                    span.classList.remove('char-correct');
+                    mistakes++;
+                }
+            });
+
+            if (typedChars.length < spans.length) {
+                spans[typedChars.length].classList.add('char-current');
+            }
+
+            mistakesEl.innerText = mistakes;
+
+            if (typedChars.length === spans.length) {
+                endGame();
+            }
+        }
+
+        function updateTimer() {
+            if (timeLeft > 0) {
+                timeLeft--;
+                timerEl.innerText = timeLeft + "s";
+
+                let wordsTyped = (inputArea.value.length / 5);
+                let minutesPassed = (60 - timeLeft) / 60;
+                let currentWpm = Math.round(wordsTyped / minutesPassed);
+                wpmEl.innerText = currentWpm > 0 && isFinite(currentWpm) ? currentWpm : 0;
+            } else {
+                endGame();
+            }
+        }
+
+        function endGame() {
+            clearInterval(timer);
+            inputArea.disabled = true;
+
+            let finalWpm = parseInt(wpmEl.innerText);
+            resultBanner.style.display = "block";
+
+            if (finalWpm >= 40) {
+                badgeText.innerText = "PRO TYPIST ⚡";
+            } else if (finalWpm >= 20) {
+                badgeText.innerText = "INTERMEDIATE 👍";
+            } else {
+                badgeText.innerText = "BEGINNER 🎯";
+            }
+        }
+
+        function initGame() {
+            clearInterval(timer);
+            timeLeft = 60;
+            isTypingStarted = false;
+            inputArea.disabled = false;
+            inputArea.value = "";
+            timerEl.innerText = "60s";
+            mistakesEl.innerText = "0";
+            wpmEl.innerText = "0";
+            resultBanner.style.display = "none";
+            loadText();
+        }
+
+        inputArea.addEventListener('input', handleTyping);
+        window.onload = initGame;
+    </script>
+</body>
+  </html>
